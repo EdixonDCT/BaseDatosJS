@@ -5,9 +5,7 @@ const router = express.Router();
 
 router.get("/", CategoriaController.getAllCategoria);
 
-router.post("/", (req, res) => {
-    console.log(req.body);
-  });
+router.post("/", CategoriaController.createCategoria);
 
 router.put("/", (req, res) => {
     console.log(req.body);
