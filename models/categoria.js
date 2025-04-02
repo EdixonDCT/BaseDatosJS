@@ -1,10 +1,10 @@
 import conection from "../utils/database.js";
 
 class Categoria {
-  constructor(nombre, descripcion) {
-    this.nombre = nombre;
-    this.descripcion = descripcion;
-  }
+  // constructor(nombre, descripcion) {
+  //   this.nombre = nombre;
+  //   this.descripcion = descripcion;
+  // }
   async getAll() {
     try {
       const [rows] = await conection.query("SELECT * FROM categorias");
@@ -13,33 +13,33 @@ class Categoria {
       throw new Error("Error al obtener las categorias");
     }
   }
-  async create()
+  async create(nombre, descripcion)
   { 
     try {
       const [result] = await conection.query("INSERT INTO categorias(nombre,descripcion) VALUES (?,?)",
-        [this.nombre, this.descripcion]); 
+        [nombre,descripcion]); 
       return{ 
         id: result.id,
-        nombre: this.nombre,
-        descripcion: this.descripcion
+        nombre,
+        descripcion
       };
     } catch (error) {
       throw new Error("Error al crear la categoria");
     }
   }
-  async update(id)
+  async update(nombre,descripcion,id)
   {
     try {
-      console.log("Desde la clase",this.nombre,this.descripcion,id);
+      console.log("Desde la clase",nombre,descripcion,id);
       const [result] = await conection.query('UPDATE categorias SET nombre = ?,descripcion = ? WHERE id = ?',
-        [this.nombre, this.descripcion, id]);
+        [nombre,descripcion, id]);
       if (result.affectBows === 0) {
         throw new Error("Categoria no encontarada");
       }
       return {
         id,
-        nombre: this.nombre,
-        descripcion: this.descripcion
+        nombre,
+        descripcion
       };
     } catch (error) {
       throw new Error("Error al actualizar la categoria");

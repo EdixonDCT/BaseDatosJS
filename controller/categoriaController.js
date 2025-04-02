@@ -14,7 +14,7 @@ class CategoriaController
     {
       const { nombre, descripcion } = req.body;
       const OBJCategoria = new Categoria(nombre, descripcion);
-      const categoria = await OBJCategoria.create();
+      const categoria = await OBJCategoria.create(nombre,descripcion);
       res.status(201).json(categoria);
     } catch (error)
     {
@@ -27,7 +27,7 @@ class CategoriaController
     const { nombre, descripcion } = req.body;
     try {
       const OBJCategoria = new Categoria(nombre, descripcion)
-      const categoria = await OBJCategoria.update(id);
+      const categoria = await OBJCategoria.update(nombre,descripcion,id);
       res.json(categoria)
     } catch (error) {
       res.status(500).json({ error: error.message});
