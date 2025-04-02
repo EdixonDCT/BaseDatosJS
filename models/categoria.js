@@ -17,7 +17,7 @@ class Categoria {
   { 
     try {
       const [result] = await conection.query("INSERT INTO categorias(nombre,descripcion) VALUES (?,?)",
-        [this.nombre, this, this.descripcion]);
+        [this.nombre, this.descripcion]); 
       return{ 
         id: result.id,
         nombre: this.nombre,
@@ -25,6 +25,24 @@ class Categoria {
       };
     } catch (error) {
       throw new Error("Error al crear la categoria");
+    }
+  }
+  async update(id)
+  {
+    try {
+      console.log("Desde la clase",this.nombre,this.descripcion,id);
+      const [result] = await conection.query('UPDATE categorias SET nombre = ?,descripcion = ? WHERE id = ?',
+        [this.nombre, this.descripcion, id]);
+      if (result.affectBows === 0) {
+        throw new Error("Categoria no encontarada");
+      }
+      return {
+        id,
+        nombre: this.nombre,
+        descripcion: this.descripcion
+      };
+    } catch (error) {
+      throw new Error("Error al actualizar la categoria");
     }
   }
 }
