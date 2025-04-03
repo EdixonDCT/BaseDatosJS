@@ -45,6 +45,44 @@ class Categoria {
       throw new Error("Error al actualizar la categoria");
     }
   }
+  async patch(id,nombre,descripcion,campos)
+    {
+        try {
+        let sql = "UPDATE categorias SET ";
+        for (let cont = 0; cont < Object.keys(campos).length; cont++)
+        {
+            let value = Object.keys(campos)[cont];
+            sql += `${value} = '${campos[value]}'`;
+            cont == Object.keys(campos).length-1 ? sql += "" : sql += ",";
+        }
+        sql += ` WHERE id= ${id}`;
+        const [result] = await conection.query(sql);
+        if(result.affectedRows === 0){
+            throw new Error("Categoría no encontrada"); 
+        }
+        return { id,nombre,descripcion} 
+
+        } catch (error) 
+        {
+            console.log(error.message);
+            throw new Error("Error al generar el patch");
+        }
+    }
+    async delete(id)
+    {
+      try {
+      const [result] = await conection.query("DELETE FROM categorias WHERE id = ?",
+        [id]);
+      if(result.affectedRows === 0){
+          throw new Error("Categoría no encontrada"); 
+      }
+      return {id}
+      } catch (error) 
+      {
+        console.log(error.message);
+        throw new Error("Error al eliminar"); 
+      }
+    }
 }
   
 export default Categoria;
