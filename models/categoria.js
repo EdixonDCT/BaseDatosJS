@@ -68,19 +68,36 @@ class Categoria {
             throw new Error("Error al generar el patch");
         }
     }
+    async relacionConProductos(id)
+    {
+      const[productos] = await conection.query(
+        "SELECT * FROM productos WHERE categoria_id = ?",
+        [id]
+      )
+      return productos.length > 0;
+    }
     async delete(id)
     {
-      try {
-      const [result] = await conection.query("DELETE FROM categorias WHERE id = ?",
-        [id]);
-      if(result.affectedRows === 0){
-          throw new Error("Categoría no encontrada"); 
-      }
-      return {id}
-      } catch (error) 
+      const categoriaRelacionado = await this.relacionConProductos(id);
+      if (categoriaRelacionado) 
       {
-        console.log(error.message);
-        throw new Error("Error al eliminar"); 
+        return {
+          error: true,
+          mensaje: 
+          "No se puede eliminar la categoria,ya que esta asociada a uno o mas productos."
+        };
+      }
+      const[result] = await conection.query("DELETE FROM categorias WHERE id=?",[id]);
+      if (result.affectedRows === 0)
+        {
+          return{
+            error: true,
+            mensaje: "Categoria no encontrada"
+          }
+        }
+      return{
+        error: false,
+        mensaje: "Categoria Eliminada de manera Exitosa"
       }
     }
 }
